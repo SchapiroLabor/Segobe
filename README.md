@@ -126,7 +126,7 @@ Captured metrics in the `metrics.csv` for each input CSV `row`:
 
 * **Start:** Label-images of ground truth and prediction cells
 
-<img src="docs/images/GT_Prediction.png.png" alt="Description" width="40%"/>
+<img src="docs/images/GT_Prediction.png" alt="Description" width="40%"/>
 
 * **Goals:**
   * Segmentation error type counts: True Positives (TP), False Positives (FP), False Negatives (FN), Merges, Splits, Catastrophes
