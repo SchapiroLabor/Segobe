@@ -4,7 +4,9 @@ import os
 import pandas as pd
 import tifffile
 
-from obi_segval import SegmentationEvaluationBatch, plot_error_types, plot_barplot
+from obi_segval.evaluator import SegmentationEvaluationBatch
+from obi_segval.plotter import plot_error_types, plot_barplot
+from obi_segval import __version__
 
 
 def get_args():
@@ -39,6 +41,9 @@ def get_args():
         "--save_plots", action="store_true",
         help="Save plots of metrics and error types"
     )
+
+    parser.add_argument("--version", action="version", version=f"OBI-Segval {__version__}")
+
     return parser.parse_args()
 
 
@@ -99,7 +104,7 @@ def main():
                 metrics,
                 name=f"{row['sampleID']}_{row['category']}",
                 save=True,
-                save_path=os.path.join(plots_dir, f"{args.basename}_{row['sampleID']}_error_types.png"),
+                save_path=os.path.join(plots_dir, f"{args.basename}_{row['sampleID']}_{row['category']}_error_types.png"),
                 suptitle=True
             )
 

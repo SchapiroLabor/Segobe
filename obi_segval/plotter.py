@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from matplotlib.patches import Patch
 from skimage import segmentation
-from .utils import filter_mask_by_ids
+from obi_segval.utils import filter_mask_by_ids
 
 """Plot summary statistics from evaluated results."""
 def plot_barplot(metrics_df, save_path=None):
