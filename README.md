@@ -148,7 +148,7 @@ Captured metrics in the `metrics.csv` for each input CSV `row`:
 
 * Apply the Hungarian method (Linear sum assignment problem) to find top matches (lowest cost)
 
-<img src="docs/images/linear_sum_output.png.png" alt="Description" width="40%"/>
+<img src="docs/images/linear_sum_output.png" alt="Description" width="40%"/>
 
 ### Counting segmentation errors
 
