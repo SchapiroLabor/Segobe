@@ -1,0 +1,33 @@
+[project]
+name = "obi-segval"
+version = "0.1.0"
+description = "Object-Based Identification Segmentation Evaluation for cells"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [
+    { name="Krešimir Bestak", email="kbestak@gmail.com" }
+]
+keywords = ["segmentation", "cell", "metrics", "evaluation"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Bio-Informatics"
+]
+dependencies = [
+    "numpy",
+    "pandas",
+    "matplotlib",
+    "scipy",
+    "networkx",
+    "scikit-image",
+    "tifffile"
+]
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+obi-segval = "obi_segval.cli:main"
