@@ -4,9 +4,9 @@ import os
 import pandas as pd
 import tifffile
 
-from obi_segval.evaluator import SegmentationEvaluationBatch
-from obi_segval.plotter import plot_error_types, plot_barplot
-from obi_segval import __version__
+from segobe.evaluator import SegmentationEvaluationBatch
+from segobe.plotter import plot_error_types, plot_barplot
+from segobe import __version__
 
 
 def get_args():
