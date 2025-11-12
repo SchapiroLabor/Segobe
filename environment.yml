@@ -11,7 +11,7 @@ dependencies:
   - matplotlib
   - networkx
   - tifffile
-  - pip
   - git
+  - pip
   - pip:
     - git+https://github.com/schapirolabor/segobe.git
