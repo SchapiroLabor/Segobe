@@ -29,7 +29,6 @@ Once the repository is made public, users can install it directly via URL:
 ```bash
 pip install git+https://github.com/schapirolabor/segobe.git
 ```
-> This will work before uploading to PyPI, as soon as the repo is public because the `pyproject.toml` is set up
 
 Verify installation with
 ```bash
