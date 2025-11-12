@@ -10,11 +10,9 @@ authors = [
 ]
 keywords = ["segmentation", "cell", "metrics", "evaluation"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
-    "Topic :: Scientific/Engineering :: Bio-Informatics"
+    "License :: OSI Approved :: MIT License"
 ]
 dependencies = [
     "numpy",
@@ -25,6 +23,10 @@ dependencies = [
     "scikit-image",
     "tifffile"
 ]
+[project.urls]
+Homepage = "https://github.com/schapirolabor/segobe"
+Issues = "https://github.com/schapirolabor/segobe/issues"
+
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
