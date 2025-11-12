@@ -67,6 +67,7 @@ jobs:
           path: dist/
 
       - name: Publish release distributions to PyPI
+        if: startsWith(github.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
