@@ -8,7 +8,7 @@ from scipy.optimize import linear_sum_assignment
 
 class SegmentationEvaluator:
     """Evaluate segmentation between a reference (GT) and evaluation (target) mask."""
-    def __init__(self, gt_mask, pred_mask, iou_threshold=0.5, graph_iou_threshold=0.1, unmatched_cost=0.4):
+    def __init__(self, gt_mask, pred_mask, iou_threshold=0.5, graph_iou_threshold=0.1, unmatched_cost=0.4, cost_matrix_metric='iou'):
         self.gt = gt_mask
         self.pred = pred_mask
         self.gt_ids = np.unique(self.gt)[1:]
@@ -20,6 +20,7 @@ class SegmentationEvaluator:
         self.iou_threshold = iou_threshold
         self.graph_iou_threshold = graph_iou_threshold
         self.unmatched_cost = unmatched_cost
+        self.cost_matrix_metric = cost_matrix_metric
         self.get_metric_matrix()
 
     def get_metric_matrix(self):
@@ -63,20 +64,20 @@ class SegmentationEvaluator:
         cost_matrix[self.n_gt:, :self.n_pred] = bottom_left     # C: Bottom-left = unmatched preds
         return cost_matrix
     
-    def specify_cost_matrix(self, metric='iou'):
-        if metric == 'iou':
+    def specify_cost_matrix(self):
+        if self.cost_matrix_metric == 'iou':
             return self.construct_cost_matrix(self.iou_matrix)
-        elif metric == 'dice':
+        elif self.cost_matrix_metric == 'dice':
             return self.construct_cost_matrix(self.dice_matrix)
-        elif metric == 'moc':
+        elif self.cost_matrix_metric == 'moc':
             return self.construct_cost_matrix(self.moc_matrix)
         else:
             raise ValueError("Metric must be one of 'iou', 'dice', or 'moc'.")
 
-    def evaluate(self, metric='iou'):
+    def evaluate(self):
 
         # Construct cost matrix
-        cost_matrix = self.specify_cost_matrix(metric=metric)
+        cost_matrix = self.specify_cost_matrix()    
     
         # Solve assignment
         order_res = linear_sum_assignment(cost_matrix)
@@ -174,12 +175,13 @@ class SegmentationEvaluator:
     
 class SegmentationEvaluationBatch:
     """Run evaluation for a dataframe of segmentation pairs."""
-    def __init__(self, df, plotting=False, iou_threshold=0.5, graph_iou_threshold=0.1, unmatched_cost=0.4):
+    def __init__(self, df, plotting=False, iou_threshold=0.5, graph_iou_threshold=0.1, unmatched_cost=0.4, cost_matrix_metric='iou'):
         self.df = df.copy()
         self.iou_threshold = iou_threshold
         self.graph_iou_threshold = graph_iou_threshold
         self.unmatched_cost = unmatched_cost
         self.plotting = plotting
+        self.cost_matrix_metric = cost_matrix_metric
 
     def run(self):
         results = []
@@ -187,7 +189,7 @@ class SegmentationEvaluationBatch:
             print(f"Evaluating {row['sampleID']}...")
             gt = tifffile.imread(row['ref_mask'])
             pred = tifffile.imread(row['eval_mask'])
-            evaluator = SegmentationEvaluator(gt, pred, self.iou_threshold, self.graph_iou_threshold, self.unmatched_cost)
+            evaluator = SegmentationEvaluator(gt, pred, self.iou_threshold, self.graph_iou_threshold, self.unmatched_cost, self.cost_matrix_metric)
             metrics = evaluator.evaluate()
             results.append({**row, **metrics})
         self.results = pd.DataFrame(results)

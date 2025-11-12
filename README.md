@@ -12,7 +12,7 @@ Option 1. Install directory from the repository (recommended for development)
 If you plan to develop or modify Segobe, install it in editable mode:
 ```bash
 # Clone the repository
-git clone https://github.com/kbestak/segobe.git
+git clone https://github.com/schapirolabor/segobe.git
 cd segobe
 
 # (Optional) create the conda environment
@@ -27,7 +27,7 @@ pip install -e .
 Option 2. Install directly from GitHub
 Once the repository is made public, users can install it directly via URL:
 ```bash
-pip install git+https://github.com/kbestak/segobe.git
+pip install git+https://github.com/schapirolabor/segobe.git
 ```
 > This will work before uploading to PyPI, as soon as the repo is public because the `pyproject.toml` is set up
 
@@ -51,6 +51,7 @@ segobe \
     --iou_threshold 0.5 \
     --graph_iou_threshold 0.1 \
     --unmatched_cost 0.4 \
+    --cost_matrix_metric 'iou' \
     --save_plots
 ```
 
@@ -62,6 +63,7 @@ segobe \
 |  | --iou_threshold | IoU threshold for cell matching (0-1, default: 0.5). Match is true if pair is selected with linear_sum_assignment and IoU above this threshold. |
 |  | --graph_iou_threshold | Graph IoU threshold for error detection (0-1, default: 0.1). Minimal IoU for cells to be considered 'connected'. |
 |  | --unmatched_cost | Cost for unmatched objects in the cost matrix (0-1, default: 0.4) |
+|  | --cost_matrix_metric | Specify which metric should be used for cost matrix construction (default: 'iou', other options 'dice', 'moc' - see details [here](docs/detailed_overview.md)) |
 |  | --save_plots | Boolean specifying whether plots (barplot grouped by category and row-specific error overview) are saved |
 |  | --version | Prints tool version. |
 
@@ -126,7 +128,7 @@ Check the [Detailed overview](docs/detailed_overview.md) for a deeper clarificat
 
 ## Contributing
 Contributions, issues, and feature requests are welcome!  
-Feel free to open a pull request or submit an issue on [GitHub Issues](https://github.com/kbestak/segobe/issues).
+Feel free to open a pull request or submit an issue on [GitHub Issues](https://github.com/schapirolabor/segobe/issues).
 
 Before submitting a PR:
 - Run tests (not yet applicable)
@@ -135,7 +137,8 @@ Before submitting a PR:
 ## Citing
 
 If you use **Segobe** in your work, please cite:
+
 >Bestak, K. Segobe: Object-Based Evaluation of Segmentation Results.
->Available at: [https://github.com/kbestak/segobe](https://github.com/kbestak/segobe)
+>Available at: [https://github.com/schapirolabor/segobe](https://github.com/schapirolabor/segobe)
 
 Note that for referencing the segmentation errors as used here, [Greenwald *et al.* 2022](https://doi.org/10.1038/s41587-021-01094-0) needs to be cited.

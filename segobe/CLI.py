@@ -11,7 +11,7 @@ from segobe import __version__
 
 def get_args():
     parser = argparse.ArgumentParser(
-        description="Run OBI-Segval evaluation on a batch of segmentation masks."
+        description="Run segmentation evaluation on a batch of segmentation masks."
     )
     parser.add_argument(
         "-i", "--input_csv", type=str, required=True,
@@ -38,11 +38,16 @@ def get_args():
         help="Cost for unmatched objects (0-1, default: 0.4)"
     )
     parser.add_argument(
+        "--cost_matrix_metric", type=str, default="iou",
+        help="Metric used for cost matrix calculation (default: iou)",
+        choices=["iou", "dice", "moc"]
+    )
+    parser.add_argument(
         "--save_plots", action="store_true",
         help="Save plots of metrics and error types"
     )
 
-    parser.add_argument("--version", action="version", version=f"OBI-Segval {__version__}")
+    parser.add_argument("--version", action="version", version=f"Segobe {__version__}")
 
     return parser.parse_args()
 
@@ -62,12 +67,14 @@ def main():
     # Read input CSV
     df = pd.read_csv(args.input_csv)
 
+    print(args.cost_matrix_metric)
     # Run batch evaluation
     batch_eval = SegmentationEvaluationBatch(
         df,
         iou_threshold=args.iou_threshold,
         graph_iou_threshold=args.graph_iou_threshold,
-        unmatched_cost=args.unmatched_cost
+        unmatched_cost=args.unmatched_cost,
+        cost_matrix_metric=args.cost_matrix_metric
     )
     results_df = batch_eval.run()
 
