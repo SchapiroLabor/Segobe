@@ -8,5 +8,5 @@ __all__ = [
     "SegmentationEvaluationBatch",
     "plot_error_types",
     "plot_barplot",
-    'filter_mask_by_ids'
+    "filter_mask_by_ids",
 ]

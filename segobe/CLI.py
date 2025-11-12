@@ -14,37 +14,55 @@ def get_args():
         description="Run segmentation evaluation on a batch of segmentation masks."
     )
     parser.add_argument(
-        "-i", "--input_csv", type=str, required=True,
-        help="CSV file with columns: sampleID, ref_mask, eval_mask, category"
+        "-i",
+        "--input_csv",
+        type=str,
+        required=True,
+        help="CSV file with columns: sampleID, ref_mask, eval_mask, category",
     )
     parser.add_argument(
-        "-o", "--output_dir", type=str, required=True,
-        help="Directory to save output metrics and plots"
+        "-o",
+        "--output_dir",
+        type=str,
+        required=True,
+        help="Directory to save output metrics and plots",
     )
     parser.add_argument(
-        "-b", "--basename", type=str, required=True,
-        help="Unique basename used when saving metrics and plots"
+        "-b",
+        "--basename",
+        type=str,
+        required=True,
+        help="Unique basename used when saving metrics and plots",
     )
     parser.add_argument(
-        "--iou_threshold", type=float, default=0.5,
-        help="IoU threshold for matching (0-1, default: 0.5)"
+        "--iou_threshold",
+        type=float,
+        default=0.5,
+        help="IoU threshold for matching (0-1, default: 0.5)",
     )
     parser.add_argument(
-        "--graph_iou_threshold", type=float, default=0.1,
-        help="Graph IoU threshold for error detection (0-1, default: 0.1)"
+        "--graph_iou_threshold",
+        type=float,
+        default=0.1,
+        help="Graph IoU threshold for error detection (0-1, default: 0.1)",
     )
     parser.add_argument(
-        "--unmatched_cost", type=float, default=0.4,
-        help="Cost for unmatched objects (0-1, default: 0.4)"
+        "--unmatched_cost",
+        type=float,
+        default=0.4,
+        help="Cost for unmatched objects (0-1, default: 0.4)",
     )
     parser.add_argument(
-        "--cost_matrix_metric", type=str, default="iou",
+        "--cost_matrix_metric",
+        type=str,
+        default="iou",
         help="Metric used for cost matrix calculation (default: iou)",
-        choices=["iou", "dice", "moc"]
+        choices=["iou", "dice", "moc"],
     )
     parser.add_argument(
-        "--save_plots", action="store_true",
-        help="Save plots of metrics and error types"
+        "--save_plots",
+        action="store_true",
+        help="Save plots of metrics and error types",
     )
 
     parser.add_argument("--version", action="version", version=f"Segobe {__version__}")
@@ -74,7 +92,7 @@ def main():
         iou_threshold=args.iou_threshold,
         graph_iou_threshold=args.graph_iou_threshold,
         unmatched_cost=args.unmatched_cost,
-        cost_matrix_metric=args.cost_matrix_metric
+        cost_matrix_metric=args.cost_matrix_metric,
     )
     results_df = batch_eval.run()
 
@@ -100,9 +118,11 @@ def main():
 
         # Optionally generate error type plots for each sample
         for _, row in df.iterrows():
-            gt_mask = tifffile.imread(row['ref_mask'])
-            pred_mask = tifffile.imread(row['eval_mask'])
-            metrics = results_df.loc[results_df['sampleID'] == row['sampleID']].to_dict('records')[0]
+            gt_mask = tifffile.imread(row["ref_mask"])
+            pred_mask = tifffile.imread(row["eval_mask"])
+            metrics = results_df.loc[results_df["sampleID"] == row["sampleID"]].to_dict(
+                "records"
+            )[0]
             # check if output_dir / plots exists
 
             plot_error_types(
@@ -111,9 +131,13 @@ def main():
                 metrics,
                 name=f"{row['sampleID']}_{row['category']}",
                 save=True,
-                save_path=os.path.join(plots_dir, f"{args.basename}_{row['sampleID']}_{row['category']}_error_types.png"),
-                suptitle=True
+                save_path=os.path.join(
+                    plots_dir,
+                    f"{args.basename}_{row['sampleID']}_{row['category']}_error_types.png",
+                ),
+                suptitle=True,
             )
+
 
 if __name__ == "__main__":
     main()
