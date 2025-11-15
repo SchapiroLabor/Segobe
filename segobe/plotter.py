@@ -70,6 +70,7 @@ def plot_error_types(
     save_path=None,
     suptitle=False,
     legend=False,
+    target_size=600,
 ):
 
     # Extract categories
@@ -84,6 +85,14 @@ def plot_error_types(
     cat_gt = [c["gts"] for c in metrics["catastrophe_details"]]
     cat_preds = [c["preds"] for c in metrics["catastrophe_details"]]
 
+    scale = max(gt_mask.shape) // target_size
+    if scale < 1:
+        scale = 1
+    skip_boundaries = scale > 4
+
+    plot_gt = gt_mask[::scale, ::scale]
+    plot_pred = pred_mask[::scale, ::scale]
+
     # Colors
     blue = "#1f77b4"
     yellow = "#ffdb58"
@@ -91,29 +100,29 @@ def plot_error_types(
 
     # Categories: (Title, GT Mask, Pred Mask)
     categories = [
-        ("Ground Truth", filter_mask_by_ids(gt_mask, np.unique(gt_mask)[1:]), None),
-        ("Prediction", None, filter_mask_by_ids(pred_mask, np.unique(pred_mask)[1:])),
+        ("Ground Truth", filter_mask_by_ids(plot_gt, np.unique(plot_gt)[1:]), None),
+        ("Prediction", None, filter_mask_by_ids(plot_pred, np.unique(plot_pred)[1:])),
         (
             "True Positives",
-            filter_mask_by_ids(gt_mask, tp_gt),
-            filter_mask_by_ids(pred_mask, tp_preds),
+            filter_mask_by_ids(plot_gt, tp_gt),
+            filter_mask_by_ids(plot_pred, tp_preds),
         ),
-        ("False Negatives", filter_mask_by_ids(gt_mask, fn_list), None),
-        ("False Positives", None, filter_mask_by_ids(pred_mask, fp_list)),
+        ("False Negatives", filter_mask_by_ids(plot_gt, fn_list), None),
+        ("False Positives", None, filter_mask_by_ids(plot_pred, fp_list)),
         (
             "Merges",
-            filter_mask_by_ids(gt_mask, merge_gt),
-            filter_mask_by_ids(pred_mask, merge_preds),
+            filter_mask_by_ids(plot_gt, merge_gt),
+            filter_mask_by_ids(plot_pred, merge_preds),
         ),
         (
             "Splits",
-            filter_mask_by_ids(gt_mask, split_gt),
-            filter_mask_by_ids(pred_mask, split_preds),
+            filter_mask_by_ids(plot_gt, split_gt),
+            filter_mask_by_ids(plot_pred, split_preds),
         ),
         (
             "Catastrophes",
-            filter_mask_by_ids(gt_mask, cat_gt),
-            filter_mask_by_ids(pred_mask, cat_preds),
+            filter_mask_by_ids(plot_gt, cat_gt),
+            filter_mask_by_ids(plot_pred, cat_preds),
         ),
     ]
 
@@ -140,7 +149,7 @@ def plot_error_types(
         ax.set_title(title, fontsize=14)
 
         # Black background
-        ax.imshow(np.zeros_like(gt_mask, dtype=np.uint8), cmap="gray")
+        ax.imshow(np.zeros_like(plot_gt, dtype=np.uint8), cmap="gray")
 
         # Overlap: green where both gt and pred are present
         if gt is not None and pred is not None:
@@ -163,27 +172,28 @@ def plot_error_types(
                 cmap=ListedColormap([yellow]),
                 alpha=0.8,
             )
-
-            ax.contour(
-                segmentation.find_boundaries(gt, mode="outer"),
-                colors=blue,
-                linewidths=0.5,
-            )
-            ax.contour(
-                segmentation.find_boundaries(pred, mode="outer"),
-                colors=yellow,
-                linewidths=0.5,
-            )
+            if not skip_boundaries:
+                ax.contour(
+                    segmentation.find_boundaries(gt, mode="outer"),
+                    colors=blue,
+                    linewidths=0.5,
+                )
+                ax.contour(
+                    segmentation.find_boundaries(pred, mode="outer"),
+                    colors=yellow,
+                    linewidths=0.5,
+                )
 
         elif gt is not None:
             ax.imshow(
                 np.ma.masked_where(gt == 0, gt), cmap=ListedColormap([blue]), alpha=0.8
             )
-            ax.contour(
-                segmentation.find_boundaries(gt, mode="outer"),
-                colors=blue,
-                linewidths=0.5,
-            )
+            if not skip_boundaries:
+                ax.contour(
+                    segmentation.find_boundaries(gt, mode="outer"),
+                    colors=blue,
+                    linewidths=0.5,
+                )
 
         elif pred is not None:
             ax.imshow(
@@ -191,11 +201,12 @@ def plot_error_types(
                 cmap=ListedColormap([yellow]),
                 alpha=0.8,
             )
-            ax.contour(
-                segmentation.find_boundaries(pred, mode="outer"),
-                colors=yellow,
-                linewidths=0.5,
-            )
+            if not skip_boundaries:
+                ax.contour(
+                    segmentation.find_boundaries(pred, mode="outer"),
+                    colors=yellow,
+                    linewidths=0.5,
+                )
     fig.subplots_adjust(left=0.01, right=0.99, top=0.85, bottom=0.05, wspace=0.05)
 
     # Legend

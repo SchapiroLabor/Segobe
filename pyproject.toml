@@ -19,7 +19,6 @@ dependencies = [
     "pandas",
     "matplotlib",
     "scipy",
-    "networkx",
     "scikit-image",
     "tifffile"
 ]

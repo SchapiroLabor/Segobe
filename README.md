@@ -8,7 +8,7 @@ Designed for cell segmentation evaluation, it can handle large batches of sample
 
 ## Installation
 
-Option 1. Install directory from the repository (recommended for development)
+### Option 1. Install directory from the repository (recommended for development)
 If you plan to develop or modify Segobe, install it in editable mode:
 ```bash
 # Clone the repository
@@ -24,7 +24,7 @@ pip install -e .
 ```
 > The -e flag (editable mode) means the changes to the source code are immediately reflected without reinstalling.
 
-Option 2. Install directly from GitHub
+### Option 2. Install directly from GitHub
 Once the repository is made public, users can install it directly via URL:
 ```bash
 pip install git+https://github.com/schapirolabor/segobe.git
@@ -50,7 +50,6 @@ segobe \
     --iou_threshold 0.5 \
     --graph_iou_threshold 0.1 \
     --unmatched_cost 0.4 \
-    --cost_matrix_metric 'iou' \
     --save_plots
 ```
 
@@ -62,8 +61,9 @@ segobe \
 |  | --iou_threshold | IoU threshold for cell matching (0-1, default: 0.5). Match is true if pair is selected with linear_sum_assignment and IoU above this threshold. |
 |  | --graph_iou_threshold | Graph IoU threshold for error detection (0-1, default: 0.1). Minimal IoU for cells to be considered 'connected'. |
 |  | --unmatched_cost | Cost for unmatched objects in the cost matrix (0-1, default: 0.4) |
-|  | --cost_matrix_metric | Specify which metric should be used for cost matrix construction (default: 'iou', other options 'dice', 'moc' - see details [here](docs/detailed_overview.md)) |
+|  | --cost_matrix_metric | Specify which metric should be used for cost matrix construction (default: 'iou', other options 'dice', 'moc' - see details [here](docs/detailed_overview.md)) `note that only IoU is currently supported` |
 |  | --save_plots | Boolean specifying whether plots (barplot grouped by category and row-specific error overview) are saved |
+|  | --plot_target_size | Size in pixels of the plot error types subfigures. If the inputs are larger, they will be approximately downsampled by a scale factor. If that scale factor is larger than 4, boundaries will not be drawn. (default: 600) |
 |  | --version | Prints tool version. |
 
 ### Input format
@@ -110,7 +110,6 @@ Captured metrics in the `metrics.csv` for each input CSV `row`:
 * Splits: counts and dictionary of matched predictions to GTs
 * Merges: counts and dictionary of matched GTs to predictions
 * Catastrophes: counts and dictionary of groups of GTs and predictions involved
-* IoU graph: constructed graph of cell overlaps
 * True postives: counts
 * False positives: counts
 * False negatives: counts
