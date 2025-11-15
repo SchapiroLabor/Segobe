@@ -102,7 +102,7 @@ def main():
         iou_threshold=args.iou_threshold,
         graph_iou_threshold=args.graph_iou_threshold,
         unmatched_cost=args.unmatched_cost,
-        cost_matrix_metric=args.cost_matrix_metric,
+        #cost_matrix_metric=args.cost_matrix_metric,
     )
     results_df = batch_eval.run()
 
