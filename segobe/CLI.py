@@ -84,8 +84,12 @@ def main():
 
     # Read input CSV
     df = pd.read_csv(args.input_csv)
+    required_columns = {"sampleID", "ref_mask", "eval_mask", "category"}
+    if not required_columns.issubset(df.columns):
+        raise ValueError(
+            f"Input CSV must contain columns: {required_columns}, got {df.columns}"
+        )
 
-    print(args.cost_matrix_metric)
     # Run batch evaluation
     batch_eval = SegmentationEvaluationBatch(
         df,
