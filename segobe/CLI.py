@@ -60,6 +60,12 @@ def get_args():
         choices=["iou", "dice", "moc"],
     )
     parser.add_argument(
+        "--target_plot_size",
+        type=int,
+        default=600,
+        help="Target size to which large input images will be downsampled for error type plots.",
+    )
+    parser.add_argument(
         "--save_plots",
         action="store_true",
         help="Save plots of metrics and error types",
@@ -140,6 +146,8 @@ def main():
                     f"{args.basename}_{row['sampleID']}_{row['category']}_error_types.png",
                 ),
                 suptitle=True,
+                legend=False,
+                target_size=args.target_plot_size
             )
 
 
