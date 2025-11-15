@@ -13,6 +13,7 @@ Efficiency update - only cells with overlaps are taken into consideration when c
 
 ### `Fixed`
 - memory issues for large input masks with many cells
+- Dockerfile copies the repo to pip install instead of pointing to main
 
 ### `Removed`
 - graph construction with networkx, replaced with functions
